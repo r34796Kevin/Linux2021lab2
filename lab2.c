@@ -10,18 +10,11 @@ typedef struct __element {
     struct list_head list;
 } list_ele_t;
 
-typedef struct {
-    //list_ele_t *head; /* Linked list of elements */
-    //list_ele_t *tail;
-    size_t size;
-    struct list_head list;
-} queue_t;
-
 static struct list_head *get_middle(struct list_head *list)
 {
     struct list_head *fast = list->next, *slow;
     list_for_each (slow, list) {
-        if (fast->next == list| fast->next->next == list)
+        if (fast->next == list || fast->next->next == list)
             break;
         fast = fast->next->next;
     }
@@ -33,15 +26,6 @@ static void list_merge(struct list_head *lhs,
                        struct list_head *head)
 {
     INIT_LIST_HEAD(head);
-    if (list_empty(lhs)) {
-        list_splice_tail(lhs, head);
-        return;
-    }
-    if (list_empty(rhs)) {
-        list_splice_tail(rhs, head);
-        return;
-    }
-
     while (!list_empty(lhs) && !list_empty(rhs)) {
         char *lv = list_entry(lhs->next, list_ele_t, list)->value;
         char *rv = list_entry(rhs->next, list_ele_t, list)->value;
@@ -124,14 +108,14 @@ bool q_insert_head(struct list_head *q, char *s)
     }
 
     newh->value = new_value;
-    list_add_tail(&newh->list, q);
+    list_add_tail(&newh->list,q);
 
     return true;
 }
 
 int main(void)
 {   
-    FILE *fp = fopen("cities.txt", "r");
+    FILE *fp = fopen("test.txt", "r");
     if (!fp) {
         perror("failed to open cities.txt");
         exit(EXIT_FAILURE);
@@ -144,9 +128,9 @@ int main(void)
         q_insert_head(q, buf);
     }
     fclose(fp);
-    //q_show(q);
-    //list_merge_sort(q);
-    //q_show(q);
+    q_show(q);
+    list_merge_sort(q);
+    q_show(q);
     assert(validate(q));
 
     q_free(q);
